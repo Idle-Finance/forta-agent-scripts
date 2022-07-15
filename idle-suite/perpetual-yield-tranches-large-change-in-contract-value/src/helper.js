@@ -63,7 +63,8 @@ async function getContractValuesInUsd(cdos) {
     const contractValue = ethers.utils.formatUnits(data[2*i], cdo.tokenDecimals)
     const usdPrice = ethers.utils.formatEther(data[2*i + 1])
 
-    return contractValue * usdPrice
+    // return contractValue * usdPrice
+    return contractValue
   }) 
 }
 
