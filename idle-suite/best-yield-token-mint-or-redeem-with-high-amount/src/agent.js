@@ -66,10 +66,11 @@ const handleTransaction = async (txEvent) => {
 }
 
 function createAlert(symbol, usdAmount, type) {
+  const sign = type == 'Mint' ? '+' : '-';
   return Finding.fromObject({
-    name: `Best Yield Token ${type} With High Amount`,
+    name: `Best yield ${symbol} ${type} ${sign}${usdAmount.toFixed(2)}$`,
     description: `${type} of ${symbol} tokens with high amount`,
-    alertId: "IDLE-BEST-YIELD-MINT-OR-BORROW-WITH-HIGH-AMOUNT",
+    alertId: "IDLE-BY-TVL",
     protocol: "idlefi",
     severity: FindingSeverity.Medium,
     type: FindingType.Info,
