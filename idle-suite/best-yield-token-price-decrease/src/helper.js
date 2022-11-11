@@ -21,11 +21,14 @@ function getTokenPrices(contracts) {
     const tokenPriceCalls = contracts.map(contract => contract.tokenPrice())
     return ethcallProvider.all(tokenPriceCalls)
 }
+const additionalMarkets = [
+    "0xF6954B03d6a94Ba9e8C80CBE5824f22a401EE5D2" // idleUSDCBB
+];
 
 module.exports = {
     getMarkets: async () => {
         const marketsAddresses = await contract.getAllMarkets()
-        const contracts = marketsAddresses.map(address => new Contract(address, marketAbi))
+        const contracts = marketsAddresses.concat(additionalMarkets).map(address => new Contract(address, marketAbi))
 
         // Get the pool's symbol
         const symbolsCalls = contracts.map(contract => contract.symbol())
