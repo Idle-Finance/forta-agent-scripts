@@ -21,7 +21,9 @@ const oracleAbi = [ "function getPriceUSD(address asset) public view returns (in
 const tokenAbi = [ "function decimals() external view returns (uint8)" ]
 
 const additionalMarkets = [
-    "0xDc7777C771a6e4B3A82830781bDDe4DBC78f320e" // idleUSDCJunior (eulerstaking + morpho aave)
+    "0xDc7777C771a6e4B3A82830781bDDe4DBC78f320e", // idleUSDCJunior (eulerstaking + morpho aave)
+    "0xfa3AfC9a194BaBD56e743fA3b7aA2CcbED3eAaad", // idleUSDTJunior (eulerstaking + morpho aave)
+    "0xeC9482040e6483B7459CC0Db05d51dfA3D3068E1", // idleDAIJunior (eulerstaking + morpho aave)
 ];
 
 module.exports = {
