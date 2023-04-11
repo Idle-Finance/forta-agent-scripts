@@ -31,6 +31,16 @@ const oracleAbi = [ "function getPriceUSD(address asset) public view returns (in
 const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
 const daiAddress = "0x6b175474e89094c44da98b954eedeac495271d0f"
 
+const excludedCDOs = [
+  '0xf5a3d259bfe7288284bd41823ec5c8327a314054',
+  '0xf615a552c000B114DdAa09636BBF4205De49333c',
+  '0x46c1f702a6aad1fd810216a5ff15aab1c62ca826',
+  '0xD5469DF8CA36E7EaeDB35D428F28E13380eC8ede',
+  '0x860B1d25903DbDFFEC579d30012dA268aEB0d621',
+  '0xec964d06cD71a68531fC9D083a142C48441F391C',
+  '0x2398Bc075fa62Ee88d7fAb6A18Cd30bFf869bDa4',
+].map(c => c.toLowerCase());
+
 // For each CDO get the contractValue and the price of the underlying token
 async function getContractValuesInUsd(cdos) {
 
@@ -72,7 +82,9 @@ module.exports = {
   getCdos: async () => {
     // Get all CDOs from the subgraph
     const response = await axios.post(theGraphApiUrl, JSON.stringify(payload))
-    const cdos = response.data.data.cdos
+    let cdos = response.data.data.cdos;
+    // Filter out the excluded CDOs
+    cdos = cdos.filter(cdo => !excludedCDOs.includes(cdo.id.toLowerCase()));
 
     const cdoContracts = cdos.map(cdo => new Contract(cdo.id, cdoAbi))
     const strategyTokenContracts = cdos.map(cdo => new Contract(cdo.strategyToken, strategyTokenAbi))
@@ -85,7 +97,6 @@ module.exports = {
     // Get the decimals of the underlying token
     const decimalsCalls = underlyingTokenContracts.map(contract => contract.decimals())
     const decimals = await ethcallProvider.all(decimalsCalls)
-
     // Create the oracle contract
     const oracleAddress = await contract.oracle()
     oracle = new Contract(oracleAddress, oracleAbi)
@@ -97,7 +108,6 @@ module.exports = {
     })
 
     const values = await getContractValuesInUsd(cdos)
-
     cdos.forEach((cdo, i) => {
       cdo.oldContractValue = values[i]
     })

@@ -47,7 +47,7 @@ const handleBlock = async (blockEvent) => {
 
 function createAlert(symbol, value, oldValue, difference) {
   return Finding.fromObject({
-    name: "Perpetual Yield Tranches Large Change in Contract Value",
+    name: `${symbol} PYT Large Change in Contract Value`,
     description: `The contractValue of the ${symbol} CDO has changed by ${difference}`,
     alertId: "IDLE-PERPETUAL-YIELD-TRANCHES-DRASTIC-CHANGE-IN-CONTRACT-VALUE",
     protocol: "idlefi",
