@@ -28,6 +28,15 @@ const tokenAbi = [
   "function symbol() external view returns (string memory)",
   "function decimals() external view returns (uint8)"
 ]
+const excludedCDOs = [
+  '0xf5a3d259bfe7288284bd41823ec5c8327a314054',
+  '0xf615a552c000B114DdAa09636BBF4205De49333c',
+  '0x46c1f702a6aad1fd810216a5ff15aab1c62ca826',
+  '0xD5469DF8CA36E7EaeDB35D428F28E13380eC8ede',
+  '0x860B1d25903DbDFFEC579d30012dA268aEB0d621',
+  '0xec964d06cD71a68531fC9D083a142C48441F391C',
+  '0x2398Bc075fa62Ee88d7fAb6A18Cd30bFf869bDa4',
+].map(c => c.toLowerCase());
 
 // For each CDO get the virtualPrice for the AA and the BB tranches
 async function getVirtualPrices(cdos) {
@@ -46,6 +55,7 @@ module.exports = {
     // Get all CDOs from the subgraph
     const response = await axios.post(theGraphApiUrl, JSON.stringify(payload))
     const cdos = response.data.data.cdos
+    cdos = cdos.filter(cdo => !excludedCDOs.includes(cdo.id.toLowerCase()));
 
     const cdoContracts = cdos.map(cdo => new Contract(cdo.id, cdoAbi))
     const tokenContracts = cdos.map(cdo => new Contract(cdo.strategyToken, tokenAbi))
